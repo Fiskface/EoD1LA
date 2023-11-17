@@ -243,7 +243,8 @@ MonoBehaviour:
   minBalls: 100
   maxBalls: 10000
   intervalBalls: 100
-  framesPerInterval: 100
+  SamplesPerInterval: 100
+  currentBalls: 0
 --- !u!4 &1114085478
 Transform:
   m_ObjectHideFlags: 0

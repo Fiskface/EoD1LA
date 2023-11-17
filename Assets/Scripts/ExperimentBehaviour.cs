@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class ExperimentBehaviour : MonoBehaviour
@@ -17,16 +20,17 @@ public class ExperimentBehaviour : MonoBehaviour
     [Header("Simulation")]
     public int minBalls = 100;
     public int maxBalls = 10000;
-    public int intervalBalls = 100;
-    public int framesPerInterval = 100;
+    public int ballsPerInterval = 100;
+    public int samplesPerInterval = 100;
+    [Header("Runtime")] public int currentBalls = 0;
     
     private int frameCounter = 0;
-    private int currentBallCount;
+    private List<int> antalBollarList = new List<int>();
 
     void Awake()
     {
         whiteBall = Instantiate(whiteBallSpawn);
-        currentBallCount = minBalls;
+        
         ballArray.array = new BallValues[minBalls];
         for (int i = 0; i < minBalls; i++)
         {
@@ -34,6 +38,8 @@ public class ExperimentBehaviour : MonoBehaviour
         }
 
         ballArray.sortedArray = (BallValues[])ballArray.array.Clone();
+        currentBalls = ballArray.array.Length;
+        antalBollarList.Add(currentBalls);
     }
 
     // Update is called once per frame
@@ -45,14 +51,21 @@ public class ExperimentBehaviour : MonoBehaviour
         algorithmPort.SignalSort();
         Profiler.EndSample();
         
-        
-        
         SetColors();
         
         frameCounter++;
-        if (frameCounter >= framesPerInterval)
+        if (frameCounter >= samplesPerInterval)
         {
-            //SwapInterval
+            if (ballArray.array.Length < maxBalls)
+            {
+                IncreaseInterval();
+                frameCounter = 0;
+            }
+            else
+            {
+                //TODO: End program here
+            }
+            
         }
         
     }
@@ -89,6 +102,39 @@ public class ExperimentBehaviour : MonoBehaviour
             a[j].sr.color = Color.gray;
         }
         Profiler.EndSample();
+    }
+
+    private void IncreaseInterval()
+    {
+        algorithmPort.SignalIntervalIncrease();
+        
+        Array.Resize(ref ballArray.array, ballArray.array.Length + ballsPerInterval);
+        for (int i = 1; i <= ballsPerInterval; i++)
+        {
+            SpawnBall(ballArray.array.Length - i);
+        }
+
+        ballArray.sortedArray = (BallValues[])ballArray.array.Clone();
+        currentBalls = ballArray.array.Length;
+        antalBollarList.Add(currentBalls);
+    }
+    
+    private void WriteToFile()
+    {
+        string fullPath = @"D:\Git\EoD1LA\AntalBollar.txt";
+        using (StreamWriter writer = new StreamWriter(fullPath))
+        {
+            writer.Write("Antal Bollar;");
+            for (var i = 0; i < antalBollarList.Count; i++)
+            {
+                writer.Write(antalBollarList[i] + ";");
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        WriteToFile();
     }
 }
 

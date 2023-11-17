@@ -7,4 +7,5 @@ using UnityEngine.Events;
 public class AlgorithmPortSO : ScriptableObject
 {
     public UnityAction SignalSort = delegate {  };
+    public UnityAction SignalIntervalIncrease = delegate {  };
 }
