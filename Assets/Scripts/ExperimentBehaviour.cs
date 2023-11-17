@@ -14,32 +14,26 @@ public class ExperimentBehaviour : MonoBehaviour
     [NonSerialized] public GameObject whiteBall;
     public GameObject ballToSpawn;
     
-    [Header("Ball count")]
-    public int Min = 100;
-    public int Max = 10000;
-    public int IntervalCount = 100;
-
-    private List<IAlgorithm> sortAlgorithms = new List<IAlgorithm>();
-    private int frameCounter;
-
-    private void OnEnable()
-    {
-        algorithmPort.addAlgorithm += sortAlgorithms.Add;
-    }
+    [Header("Simulation")]
+    public int minBalls = 100;
+    public int maxBalls = 10000;
+    public int intervalBalls = 100;
+    public int framesPerInterval = 100;
     
-    private void OnDisable()
-    {
-        algorithmPort.addAlgorithm -= sortAlgorithms.Add;
-    }
+    private int frameCounter = 0;
+    private int currentBallCount;
 
     void Awake()
     {
         whiteBall = Instantiate(whiteBallSpawn);
-        ballArray.array = new BallValues[Min];
-        for (int i = 0; i < Min; i++)
+        currentBallCount = minBalls;
+        ballArray.array = new BallValues[minBalls];
+        for (int i = 0; i < minBalls; i++)
         {
             SpawnBall(i);
         }
+
+        ballArray.sortedArray = (BallValues[])ballArray.array.Clone();
     }
 
     // Update is called once per frame
@@ -47,30 +41,20 @@ public class ExperimentBehaviour : MonoBehaviour
     {
         UpdateBallValues();
         
-        Profiler.BeginSample("Algorithms", this);
-        for (int i = 0; i < sortAlgorithms.Count; i++)
-        {
-            ballArray.array = sortAlgorithms[i].Sort(ballArray.array);
-            
-            
-        }
+        Profiler.BeginSample("Sorting", this);
+        algorithmPort.SignalSort();
         Profiler.EndSample();
         
         
-        //Array.Sort(ballArray.array, (o1, o2) => o1.distance.CompareTo(o2.distance));
         
-        //Change color
-        for (int j = 0; j < ballArray.array.Length / 4; j++)
-        {
-            ballArray.array[j].sr.color = Color.gray;
-        }
-            
-        for (int j = ballArray.array.Length / 4; j < ballArray.array.Length; j++)
-        {
-            ballArray.array[j].sr.color = Color.black;
-        }
+        SetColors();
         
         frameCounter++;
+        if (frameCounter >= framesPerInterval)
+        {
+            //SwapInterval
+        }
+        
     }
 
     private void SpawnBall(int arrayIndex)
@@ -88,6 +72,23 @@ public class ExperimentBehaviour : MonoBehaviour
         {
             ballArray.array[i].distance = Vector2.Distance(ballArray.array[i].ball.transform.position, whiteBall.transform.position);
         }
+    }
+
+    private void SetColors()
+    {
+        Profiler.BeginSample("Coloring", this);
+        var a = ballArray.sortedArray;
+        
+        for (int j = a.Length / 4; j < a.Length; j++)
+        {
+            a[j].sr.color = Color.black;
+        }
+        
+        for (int j = 0; j < a.Length / 4; j++)
+        {
+            a[j].sr.color = Color.gray;
+        }
+        Profiler.EndSample();
     }
 }
 

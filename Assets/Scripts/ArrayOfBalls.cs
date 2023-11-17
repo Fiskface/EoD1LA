@@ -7,5 +7,5 @@ using UnityEngine;
 public class ArrayOfBalls : ScriptableObject
 {
     public BallValues[] array;
-
+    public BallValues[] sortedArray;
 }

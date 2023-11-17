@@ -6,5 +6,5 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Algorithm Port", menuName = "Scriptable objects/algorithmport")]
 public class AlgorithmPortSO : ScriptableObject
 {
-    public UnityAction<IAlgorithm> addAlgorithm = delegate {  };
+    public UnityAction SignalSort = delegate {  };
 }

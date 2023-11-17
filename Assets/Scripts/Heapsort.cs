@@ -1,46 +1,54 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class Heapsort : MonoBehaviour, IAlgorithm
+public class Heapsort : MonoBehaviour
 {
     public AlgorithmPortSO algorithmPort;
-    //public GameObjectSO whiteBall;
-    void Start()
-    {
-        algorithmPort.addAlgorithm(this);
-    }
 
-    // Update is called once per frame
-    void Update()
+    private BallValues[] sortedBalls;
+    public ArrayOfBalls ballArray;
+
+    private List<float> timeList = new List<float>();
+    private void OnEnable()
     {
-        
+        algorithmPort.SignalSort += Sort;
+    }
+    private void OnDisable()
+    {
+        algorithmPort.SignalSort -= Sort;
     }
 
     //Heapsort
-    public BallValues[] Sort(BallValues[] array)
+    public void Sort()
     {
+        sortedBalls = (BallValues[])ballArray.array.Clone();
         Profiler.BeginSample("Heapsort", this);
-        int n = array.Length;
+        var temp = Time.realtimeSinceStartup;
+        int n = sortedBalls.Length;
 
         if (n <= 1)
         {
-            return array;
+            return;
         }
         
         for (int i = n / 2 - 1; i >= 0; i--)
         {
-            Heapify(array, n, i);
+            Heapify(sortedBalls, n, i);
         }
 
         for (int i = n - 1; i >= 0; i--)
         {
-            Swap(array, 0, i);
-            Heapify(array, i, 0);
+            Swap(sortedBalls, 0, i);
+            Heapify(sortedBalls, i, 0);
         }
+
+        timeList.Add( Time.realtimeSinceStartup - temp);
         Profiler.EndSample();
-        return array;
+
+        ballArray.sortedArray = sortedBalls;
     }
 
     private void Heapify(BallValues[] array, int size, int i)
