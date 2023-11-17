@@ -50,20 +50,25 @@ public class ExperimentBehaviour : MonoBehaviour
         Profiler.BeginSample("Algorithms", this);
         for (int i = 0; i < sortAlgorithms.Count; i++)
         {
-            var temp = ballArray.array;
-            var sortedTemp = sortAlgorithms[i].Sort(temp);
+            ballArray.array = sortAlgorithms[i].Sort(ballArray.array);
             
-            for (int j = 0; j < sortedTemp.Length / 2; j++)
-            {
-                sortedTemp[j].sr.color = Color.gray;
-            }
             
-            for (int j = sortedTemp.Length / 2; j < sortedTemp.Length; j++)
-            {
-                sortedTemp[j].sr.color = Color.black;
-            }
         }
         Profiler.EndSample();
+        
+        
+        //Array.Sort(ballArray.array, (o1, o2) => o1.distance.CompareTo(o2.distance));
+        
+        //Change color
+        for (int j = 0; j < ballArray.array.Length / 4; j++)
+        {
+            ballArray.array[j].sr.color = Color.gray;
+        }
+            
+        for (int j = ballArray.array.Length / 4; j < ballArray.array.Length; j++)
+        {
+            ballArray.array[j].sr.color = Color.black;
+        }
         
         frameCounter++;
     }
@@ -81,8 +86,7 @@ public class ExperimentBehaviour : MonoBehaviour
     {
         for(int i = 0; i < ballArray.array.Length; i++)
         {
-            var ball = ballArray.array[i];
-            ball.distance = Vector2.Distance(ball.ball.transform.position, whiteBall.transform.position);
+            ballArray.array[i].distance = Vector2.Distance(ballArray.array[i].ball.transform.position, whiteBall.transform.position);
         }
     }
 }

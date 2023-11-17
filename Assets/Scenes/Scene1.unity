@@ -285,7 +285,7 @@ MonoBehaviour:
   ballArray: {fileID: 11400000, guid: 0f0188e82f320a846a47f1f42cb332fc, type: 2}
   whiteBallSpawn: {fileID: 1625995132285391866, guid: 76c65a2e172f2534eab8bcafa173056f, type: 3}
   ballToSpawn: {fileID: 162452307838349419, guid: c38f20d991ea1fd46be401f7f0d68668, type: 3}
-  Min: 4
+  Min: 100
   Max: 10000
   IntervalCount: 0
 --- !u!4 &1114085478

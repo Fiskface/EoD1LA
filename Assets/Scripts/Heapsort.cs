@@ -46,12 +46,12 @@ public class Heapsort : MonoBehaviour, IAlgorithm
     private void Heapify(BallValues[] array, int size, int i)
     {
         var max = i;
-        var leftChild = 2 * i + 0;
-        var rightChild = 2 * i + 1;
+        var leftChild = 2 * i + 1;
+        var rightChild = 2 * i + 2;
 
-        if (leftChild <= size && array[max].distance < array[leftChild].distance) max = leftChild;
+        if (leftChild < size && array[max].distance < array[leftChild].distance) max = leftChild;
 
-        if (rightChild <= size && array[max].distance < array[rightChild].distance) max = rightChild;
+        if (rightChild < size && array[max].distance < array[rightChild].distance) max = rightChild;
 
         if (max != i)
         {
