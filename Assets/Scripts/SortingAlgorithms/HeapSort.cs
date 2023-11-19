@@ -8,7 +8,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class Heapsort : MonoBehaviour
+public class HeapSort : MonoBehaviour
 {
     public AlgorithmPortSO algorithmPort;
 
@@ -50,7 +50,7 @@ public class Heapsort : MonoBehaviour
 
         for (int i = n - 1; i >= 0; i--)
         {
-            Swap(sortedBalls, 0, i);
+            (sortedBalls[0], sortedBalls[i]) = (sortedBalls[i], sortedBalls[0]);
             Heapify(sortedBalls, i, 0);
         }
 
@@ -72,14 +72,9 @@ public class Heapsort : MonoBehaviour
 
         if (max != i)
         {
-            Swap(array, i, max);
+            (array[i], array[max]) = (array[max], array[i]);
             Heapify(array, size, max);
         }
-    }
-
-    private void Swap(BallValues[] array, int i1, int i2)
-    {
-        (array[i1], array[i2]) = (array[i2], array[i1]);
     }
 
     private void MakeAverage()
@@ -98,8 +93,9 @@ public class Heapsort : MonoBehaviour
 
     private void WriteToFile()
     {
-        string fullPath = @"D:\Git\EoD1LA\"+this.name+".txt";
-        using (StreamWriter writer = new StreamWriter(fullPath))
+        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+        path = path + this.name + ".txt";
+        using (StreamWriter writer = new StreamWriter(path))
         {
             writer.Write(this.name+";");
             for (var i = 0; i < averageTimeList.Count; i++)

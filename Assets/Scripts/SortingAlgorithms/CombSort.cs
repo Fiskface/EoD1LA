@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class ArraySort : MonoBehaviour
+public class CombSort : MonoBehaviour
 {
     public AlgorithmPortSO algorithmPort;
 
@@ -16,7 +16,6 @@ public class ArraySort : MonoBehaviour
 
     private List<float> timeList = new List<float>();
     private List<float> averageTimeList = new List<float>(){};
-    
     private void OnEnable()
     {
         algorithmPort.SignalSort += Sort;
@@ -30,15 +29,42 @@ public class ArraySort : MonoBehaviour
         WriteToFile();
     }
 
-    private void Sort()
+    //Combsort
+    public void Sort()
     {
         sortedBalls = (BallValues[])ballArray.array.Clone();
-        Profiler.BeginSample("Array.sort", this);
+        Profiler.BeginSample("Heapsort", this);
         var temp = Time.realtimeSinceStartup;
-        Array.Sort(sortedBalls, (o1, o2) => o1.distance.CompareTo(o2.distance));
+
+        int n = sortedBalls.Length;
+        int gap = n;
+        bool swapped = true;
+        while (gap != 1 || swapped)
+        {
+            gap = getNextGap(gap);
+            swapped = false;
+
+            for (int i = 0; i < n - gap; i++)
+            {
+                if(sortedBalls[i].distance > sortedBalls[i+gap].distance)
+                {
+                    (sortedBalls[i], sortedBalls[i + gap]) = (sortedBalls[i + gap], sortedBalls[i]);
+                    swapped = true;
+                }
+            }
+        }
+        
+
         timeList.Add( Time.realtimeSinceStartup - temp);
         Profiler.EndSample();
+
         ballArray.sortedArray = sortedBalls;
+    }
+
+    private int getNextGap(int gap)
+    {
+        gap = (gap * 10) / 13;
+        return gap < 1 ? 1 : gap;
     }
     
     private void MakeAverage()
@@ -57,10 +83,12 @@ public class ArraySort : MonoBehaviour
 
     private void WriteToFile()
     {
-        string fullPath = @"D:\Git\EoD1LA\"+this.name+".txt";
-        using (StreamWriter writer = new StreamWriter(fullPath))
+        
+        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+        path = path + this.name + ".txt";
+        using (StreamWriter writer = new StreamWriter(path))
         {
-            writer.Write(this.name+";");
+            writer.Write(name+";");
             for (var i = 0; i < averageTimeList.Count; i++)
             {
                 var temp = Decimal.Parse(averageTimeList[i].ToString(), NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint);

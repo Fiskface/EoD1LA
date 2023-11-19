@@ -121,8 +121,9 @@ public class ExperimentBehaviour : MonoBehaviour
     
     private void WriteToFile()
     {
-        string fullPath = @"D:\Git\EoD1LA\AntalBollar.txt";
-        using (StreamWriter writer = new StreamWriter(fullPath))
+        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+        path = path + "AntalBollar.txt";
+        using (StreamWriter writer = new StreamWriter(path))
         {
             writer.Write("Antal Bollar;");
             for (var i = 0; i < antalBollarList.Count; i++)
