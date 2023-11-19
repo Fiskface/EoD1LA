@@ -84,7 +84,7 @@ public class CombSort : MonoBehaviour
     private void WriteToFile()
     {
         
-        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('A'));
         path = path + this.name + ".txt";
         using (StreamWriter writer = new StreamWriter(path))
         {
