@@ -16,6 +16,10 @@ public class BaseSort : MonoBehaviour
 
     protected List<float> timeList = new List<float>();
     private List<float> averageTimeList = new List<float>(){};
+
+    private float temp;
+
+    protected float timeAccumulated = 0f;
     
     private void OnEnable()
     {
@@ -34,6 +38,24 @@ public class BaseSort : MonoBehaviour
     {
         
     }
+
+    protected void StartOfSort()
+    {
+        sortedBalls = (BallValues[])ballArray.array.Clone();
+        Profiler.BeginSample(this.name, this);
+        temp = Time.realtimeSinceStartup;
+    }
+    
+    protected void EndOfSort()
+    {
+        temp = Time.realtimeSinceStartup - temp;
+        Profiler.EndSample();
+        timeList.Add(temp);
+        timeAccumulated += temp;
+        ballArray.sortedArray = sortedBalls;
+        
+        //TODO: Kill me here;
+    }
     
     private void MakeAverage()
     {
@@ -47,12 +69,13 @@ public class BaseSort : MonoBehaviour
         averageTimeList.Add(temp);
         
         timeList.Clear();
+        timeAccumulated = 0;
     }
 
     private void WriteToFile()
     {
-        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('A'));
-        path = path + this.name + ".txt";
+        string path = algorithmPort.path;
+        path = path +this.name + ".txt";
         using (StreamWriter writer = new StreamWriter(path))
         {
             writer.Write(this.name+";");

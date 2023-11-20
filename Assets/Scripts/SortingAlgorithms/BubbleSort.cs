@@ -11,11 +11,8 @@ public class BubbleSort : BaseSort
 {
     protected override void Sort()
     {
-        //TODO: Fix inherit from BaseSort problem
-        sortedBalls = (BallValues[])ballArray.array.Clone();
-        Profiler.BeginSample("Array.sort", this);
-        var temp = Time.realtimeSinceStartup;
-
+        StartOfSort();
+        
         int n = sortedBalls.Length;
         bool swapped = n > 1;
         while (swapped)
@@ -25,7 +22,7 @@ public class BubbleSort : BaseSort
             {
                 if(sortedBalls[i-1].distance > sortedBalls[i].distance)
                 {
-                    (sortedBalls[i-1], sortedBalls[i]) = (sortedBalls[i-1], sortedBalls[i]);
+                    (sortedBalls[i-1], sortedBalls[i]) = (sortedBalls[i], sortedBalls[i-1]);
                     swapped = true;
                 }
             }
@@ -33,8 +30,6 @@ public class BubbleSort : BaseSort
             n--;
         }
         
-        timeList.Add( Time.realtimeSinceStartup - temp);
-        Profiler.EndSample();
-        ballArray.sortedArray = sortedBalls;
+        EndOfSort();
     }
 }

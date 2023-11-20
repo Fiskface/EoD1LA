@@ -22,6 +22,7 @@ public class ExperimentBehaviour : MonoBehaviour
     public int maxBalls = 10000;
     public int ballsPerInterval = 100;
     public int samplesPerInterval = 100;
+    public float maxAverageTimePerInterval = 0.5f;
     [Header("Runtime")] public int currentBalls = 0;
     
     private int frameCounter = 0;
@@ -29,6 +30,7 @@ public class ExperimentBehaviour : MonoBehaviour
 
     void Awake()
     {
+        algorithmPort.MaxTimePerInterval = maxAverageTimePerInterval * samplesPerInterval;
         whiteBall = Instantiate(whiteBallSpawn);
         
         ballArray.array = new BallValues[minBalls];
@@ -43,7 +45,7 @@ public class ExperimentBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         UpdateBallValues();
         
@@ -121,7 +123,7 @@ public class ExperimentBehaviour : MonoBehaviour
     
     private void WriteToFile()
     {
-        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+        string path = algorithmPort.path;
         path = path + "AntalBollar.txt";
         using (StreamWriter writer = new StreamWriter(path))
         {

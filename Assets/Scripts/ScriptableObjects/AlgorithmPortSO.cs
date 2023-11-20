@@ -8,4 +8,6 @@ public class AlgorithmPortSO : ScriptableObject
 {
     public UnityAction SignalSort = delegate {  };
     public UnityAction SignalIntervalIncrease = delegate {  };
+    public float MaxTimePerInterval = 10;
+    public string path;
 }

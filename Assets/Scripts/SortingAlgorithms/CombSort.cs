@@ -7,34 +7,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class CombSort : MonoBehaviour
+public class CombSort : BaseSort
 {
-    public AlgorithmPortSO algorithmPort;
-
-    private BallValues[] sortedBalls;
-    public ArrayOfBalls ballArray;
-
-    private List<float> timeList = new List<float>();
-    private List<float> averageTimeList = new List<float>(){};
-    private void OnEnable()
-    {
-        algorithmPort.SignalSort += Sort;
-        algorithmPort.SignalIntervalIncrease += MakeAverage;
-    }
-    private void OnDisable()
-    {
-        algorithmPort.SignalSort -= Sort;
-        algorithmPort.SignalIntervalIncrease -= MakeAverage;
-        if (timeList.Any()) MakeAverage();
-        WriteToFile();
-    }
-
     //Combsort
-    public void Sort()
+    protected override void Sort()
     {
-        sortedBalls = (BallValues[])ballArray.array.Clone();
-        Profiler.BeginSample("Heapsort", this);
-        var temp = Time.realtimeSinceStartup;
+        StartOfSort();
 
         int n = sortedBalls.Length;
         int gap = n;
@@ -53,47 +31,13 @@ public class CombSort : MonoBehaviour
                 }
             }
         }
-        
 
-        timeList.Add( Time.realtimeSinceStartup - temp);
-        Profiler.EndSample();
-
-        ballArray.sortedArray = sortedBalls;
+        EndOfSort();
     }
 
     private int getNextGap(int gap)
     {
         gap = (gap * 10) / 13;
         return gap < 1 ? 1 : gap;
-    }
-    
-    private void MakeAverage()
-    {
-        float temp = 0;
-        foreach (var time in timeList)
-        {
-            temp += time;
-        }
-        
-        temp /= timeList.Count;
-        averageTimeList.Add(temp);
-        
-        timeList.Clear();
-    }
-
-    private void WriteToFile()
-    {
-        
-        string path = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('A'));
-        path = path + this.name + ".txt";
-        using (StreamWriter writer = new StreamWriter(path))
-        {
-            writer.Write(name+";");
-            for (var i = 0; i < averageTimeList.Count; i++)
-            {
-                var temp = Decimal.Parse(averageTimeList[i].ToString(), NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint);
-                writer.Write(temp + ";");
-            }
-        }
     }
 }
