@@ -15,7 +15,8 @@ public class BaseSort : MonoBehaviour
     public ArrayOfBalls ballArray;
 
     protected List<float> timeList = new List<float>();
-    private List<float> averageTimeList = new List<float>(){};
+    private List<float> averageTimeList = new List<float>();
+    private List<float> medianTimeList = new List<float>();
 
     private float temp;
 
@@ -25,6 +26,7 @@ public class BaseSort : MonoBehaviour
     {
         algorithmPort.SignalSort += Sort;
         algorithmPort.SignalIntervalIncrease += MakeAverage;
+        algorithmPort.amountOfSorters++;
     }
     private void OnDisable()
     {
@@ -32,6 +34,7 @@ public class BaseSort : MonoBehaviour
         algorithmPort.SignalIntervalIncrease -= MakeAverage;
         if (timeList.Any()) MakeAverage();
         WriteToFile();
+        algorithmPort.RemoveSorter();
     }
 
     protected virtual void Sort()
@@ -54,19 +57,14 @@ public class BaseSort : MonoBehaviour
         timeAccumulated += temp;
         ballArray.sortedArray = sortedBalls;
         
-        //TODO: Kill me here;
+        if(timeAccumulated > algorithmPort.MaxTimePerInterval) gameObject.SetActive(false);
     }
     
     private void MakeAverage()
     {
-        float temp = 0;
-        foreach (var time in timeList)
-        {
-            temp += time;
-        }
-        
-        temp /= timeList.Count;
-        averageTimeList.Add(temp);
+        averageTimeList.Add(timeList.Average());
+        timeList.Sort();
+        medianTimeList.Add(timeList[timeList.Count / 2]);
         
         timeList.Clear();
         timeAccumulated = 0;
@@ -74,14 +72,23 @@ public class BaseSort : MonoBehaviour
 
     private void WriteToFile()
     {
-        string path = algorithmPort.path;
-        path = path +this.name + ".txt";
+        string path = algorithmPort.path + GetType() + ".txt";
         using (StreamWriter writer = new StreamWriter(path))
         {
-            writer.Write(this.name+";");
+            writer.Write(GetType()+";");
             for (var i = 0; i < averageTimeList.Count; i++)
             {
                 var temp = Decimal.Parse(averageTimeList[i].ToString(), NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint);
+                writer.Write(temp + ";");
+            }
+        }
+        path = algorithmPort.path + GetType() + "Median.txt";
+        using (StreamWriter writer = new StreamWriter(path))
+        {
+            writer.Write(GetType()+"Median;");
+            for (var i = 0; i < medianTimeList.Count; i++)
+            {
+                var temp = Decimal.Parse(medianTimeList[i].ToString(), NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint);
                 writer.Write(temp + ";");
             }
         }

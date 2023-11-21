@@ -65,7 +65,8 @@ public class ExperimentBehaviour : MonoBehaviour
             }
             else
             {
-                //TODO: End program here
+                Application.Quit();
+                UnityEditor.EditorApplication.isPlaying = false;
             }
             
         }
