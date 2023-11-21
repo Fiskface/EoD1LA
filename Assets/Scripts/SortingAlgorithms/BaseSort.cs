@@ -45,7 +45,7 @@ public class BaseSort : MonoBehaviour
     protected void StartOfSort()
     {
         sortedBalls = (BallValues[])ballArray.array.Clone();
-        Profiler.BeginSample(this.name, this);
+        Profiler.BeginSample(GetType().Name, this);
         temp = Time.realtimeSinceStartup;
     }
     
