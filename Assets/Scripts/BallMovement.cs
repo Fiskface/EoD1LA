@@ -8,6 +8,7 @@ public class BallMovement : MonoBehaviour
 {
     private Vector3 direction;
     public float speed = 2;
+    private float oneOverSixty = 1f / 60f;
     
     void Awake()
     {
@@ -16,15 +17,15 @@ public class BallMovement : MonoBehaviour
 
     private void Update()
     {
-        transform.position += speed * 1/60 * direction;
-        if (Mathf.Abs(transform.position.x) > 8.8f)
+        transform.position += speed * oneOverSixty * direction;
+        if (Math.Abs(transform.position.x) > 8.8f)
         {
-            transform.position = new Vector3(Mathf.Sign(transform.position.x) * 8.8f, transform.position.y);
+            transform.position = new Vector3(Math.Sign(transform.position.x) * 8.8f, transform.position.y);
             direction.x = -direction.x;
         }
-        if (Mathf.Abs(transform.position.y) > 5f)
+        if (Math.Abs(transform.position.y) > 5f)
         {
-            transform.position = new Vector3(transform.position.x, Mathf.Sign(transform.position.y) * 5f);
+            transform.position = new Vector3(transform.position.x, Math.Sign(transform.position.y) * 5f);
             direction.y = -direction.y;
         }
     }
