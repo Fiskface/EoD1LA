@@ -16,8 +16,10 @@ public class ExperimentBehaviour : MonoBehaviour
     public GameObject whiteBallSpawn;
     [NonSerialized] public GameObject whiteBall;
     public GameObject ballToSpawn;
-    
-    [Header("Simulation")]
+
+    [Header("Simulation")] 
+    public Color sortedColor = Color.blue;
+    public Color unsortedColor = Color.red;
     public int minBalls = 100;
     public int maxBalls = 10000;
     public int ballsPerInterval = 100;
@@ -66,7 +68,7 @@ public class ExperimentBehaviour : MonoBehaviour
             else
             {
                 Application.Quit();
-                UnityEditor.EditorApplication.isPlaying = false;
+                //UnityEditor.EditorApplication.isPlaying = false;
             }
             
         }
@@ -97,12 +99,12 @@ public class ExperimentBehaviour : MonoBehaviour
         
         for (int j = a.Length / 4; j < a.Length; j++)
         {
-            a[j].sr.color = Color.black;
+            a[j].sr.color = unsortedColor;
         }
         
         for (int j = 0; j < a.Length / 4; j++)
         {
-            a[j].sr.color = Color.gray;
+            a[j].sr.color = sortedColor;
         }
         Profiler.EndSample();
     }
@@ -116,10 +118,15 @@ public class ExperimentBehaviour : MonoBehaviour
         {
             SpawnBall(ballArray.array.Length - i);
         }
-
+        
         ballArray.sortedArray = (BallValues[])ballArray.array.Clone();
+        
+        algorithmPort.SignalSort();
+        SetColors();
+        
         currentBalls = ballArray.array.Length;
         antalBollarList.Add(currentBalls);
+        
     }
     
     private void WriteToFile()
