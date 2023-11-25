@@ -22,7 +22,7 @@ public class ExperimentBehaviour : MonoBehaviour
     public Color sortedColor = Color.blue;
     public Color unsortedColor = Color.red;
     public int maxBalls = 10000;
-    private int ballsPerInterval = 100;
+    public int ballsPerInterval = 100;
     public int samplesPerInterval = 100;
     public float maxAverageTimePerInterval = 0.5f;
     public List<int> increaseBPIAt;
@@ -102,11 +102,13 @@ public class ExperimentBehaviour : MonoBehaviour
         for (int j = a.Length / 4; j < a.Length; j++)
         {
             a[j].sr.color = unsortedColor;
+            a[j].sr.sortingOrder = 0;
         }
         
         for (int j = 0; j < a.Length / 4; j++)
         {
             a[j].sr.color = sortedColor;
+            a[j].sr.sortingOrder = 1;
         }
         Profiler.EndSample();
     }

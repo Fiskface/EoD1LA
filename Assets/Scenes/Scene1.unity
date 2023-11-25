@@ -243,6 +243,7 @@ MonoBehaviour:
   sortedColor: {r: 0, g: 0.64084506, b: 1, a: 1}
   unsortedColor: {r: 1, g: 0, b: 0, a: 1}
   maxBalls: 1000000
+  ballsPerInterval: 100
   samplesPerInterval: 100
   maxAverageTimePerInterval: 0.1
   increaseBPIAt: 8813000010270000983a00003075000060ea0000a0860100400d030020a10700
