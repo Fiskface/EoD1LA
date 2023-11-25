@@ -53,8 +53,8 @@ public class BaseSort : MonoBehaviour
     {
         temp = Time.realtimeSinceStartup - temp;
         Profiler.EndSample();
-        timeList.Add(temp);
         timeAccumulated += temp;
+        timeList.Add(temp * 1000);
         ballArray.sortedArray = sortedBalls;
         
         if(timeAccumulated > algorithmPort.MaxTimePerInterval) gameObject.SetActive(false);

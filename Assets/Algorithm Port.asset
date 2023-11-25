@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93888d3e4e96ca8438a308f2168e5285, type: 3}
   m_Name: Algorithm Port
   m_EditorClassIdentifier: 
-  MaxTimePerInterval: 250
-  path: C:\Temp\EoD1LA\SortingStats\
+  MaxTimePerInterval: 50
+  path: C:\Users\lukas\Documents\GitHub\EoD1LA\SortingStats\
   amountOfSorters: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -20,11 +21,12 @@ public class ExperimentBehaviour : MonoBehaviour
     [Header("Simulation")] 
     public Color sortedColor = Color.blue;
     public Color unsortedColor = Color.red;
-    public int minBalls = 100;
     public int maxBalls = 10000;
-    public int ballsPerInterval = 100;
+    private int ballsPerInterval = 100;
     public int samplesPerInterval = 100;
     public float maxAverageTimePerInterval = 0.5f;
+    public List<int> increaseBPIAt;
+    public List<int> increaseBPITo;
     [Header("Runtime")] public int currentBalls = 0;
     
     private int frameCounter = 0;
@@ -35,8 +37,8 @@ public class ExperimentBehaviour : MonoBehaviour
         algorithmPort.MaxTimePerInterval = maxAverageTimePerInterval * samplesPerInterval;
         whiteBall = Instantiate(whiteBallSpawn);
         
-        ballArray.array = new BallValues[minBalls];
-        for (int i = 0; i < minBalls; i++)
+        ballArray.array = new BallValues[ballsPerInterval];
+        for (int i = 0; i < ballsPerInterval; i++)
         {
             SpawnBall(i);
         }
@@ -49,15 +51,6 @@ public class ExperimentBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateBallValues();
-        
-        Profiler.BeginSample("Sorting", this);
-        algorithmPort.SignalSort();
-        Profiler.EndSample();
-        
-        SetColors();
-        
-        frameCounter++;
         if (frameCounter >= samplesPerInterval)
         {
             if (ballArray.array.Length < maxBalls)
@@ -73,6 +66,15 @@ public class ExperimentBehaviour : MonoBehaviour
             
         }
         
+        UpdateBallValues();
+        
+        Profiler.BeginSample("Sorting", this);
+        algorithmPort.SignalSort();
+        Profiler.EndSample();
+        
+        SetColors();
+        
+        frameCounter++;
     }
 
     private void SpawnBall(int arrayIndex)
@@ -111,6 +113,15 @@ public class ExperimentBehaviour : MonoBehaviour
 
     private void IncreaseInterval()
     {
+        if(increaseBPIAt.Any())
+        {
+            if (currentBalls >= increaseBPIAt[0])
+            {
+                ballsPerInterval = increaseBPITo[0];
+                increaseBPITo.RemoveAt(0);
+                increaseBPIAt.RemoveAt(0);
+            }
+        }
         algorithmPort.SignalIntervalIncrease();
         
         Array.Resize(ref ballArray.array, ballArray.array.Length + ballsPerInterval);
@@ -121,12 +132,8 @@ public class ExperimentBehaviour : MonoBehaviour
         
         ballArray.sortedArray = (BallValues[])ballArray.array.Clone();
         
-        algorithmPort.SignalSort();
-        SetColors();
-        
         currentBalls = ballArray.array.Length;
         antalBollarList.Add(currentBalls);
-        
     }
     
     private void WriteToFile()

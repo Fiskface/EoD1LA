@@ -242,11 +242,11 @@ MonoBehaviour:
   ballToSpawn: {fileID: 162452307838349419, guid: c38f20d991ea1fd46be401f7f0d68668, type: 3}
   sortedColor: {r: 0, g: 0.64084506, b: 1, a: 1}
   unsortedColor: {r: 1, g: 0, b: 0, a: 1}
-  minBalls: 100
-  maxBalls: 100000
-  ballsPerInterval: 100
-  samplesPerInterval: 250
-  maxAverageTimePerInterval: 1
+  maxBalls: 1000000
+  samplesPerInterval: 100
+  maxAverageTimePerInterval: 0.1
+  increaseBPIAt: 8813000010270000983a00003075000060ea0000a0860100400d030020a10700
+  increaseBPITo: fa000000f4010000e8030000c40900008813000010270000a8610000a0860100
   currentBalls: 0
 --- !u!4 &1114085478
 Transform:
@@ -334,6 +334,10 @@ PrefabInstance:
     - target: {fileID: 4060913546234984858, guid: 94d7d06f846476a4088d81499d6e98f0, type: 3}
       propertyPath: m_Name
       value: Insertion Sort
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060913546234984858, guid: 94d7d06f846476a4088d81499d6e98f0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6496033520822022093, guid: 94d7d06f846476a4088d81499d6e98f0, type: 3}
       propertyPath: m_RootOrder
