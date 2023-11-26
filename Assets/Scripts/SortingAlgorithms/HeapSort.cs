@@ -15,7 +15,7 @@ public class HeapSort : BaseSort
     {
         StartOfSort();
         
-        int n = sortedBalls.Length;
+        int n = ballsToSort.Length;
 
         if (n <= 1)
         {
@@ -24,13 +24,13 @@ public class HeapSort : BaseSort
         
         for (int i = n / 2 - 1; i >= 0; i--)
         {
-            Heapify(sortedBalls, n, i);
+            Heapify(ballsToSort, n, i);
         }
 
         for (int i = n - 1; i >= 0; i--)
         {
-            (sortedBalls[0], sortedBalls[i]) = (sortedBalls[i], sortedBalls[0]);
-            Heapify(sortedBalls, i, 0);
+            (ballsToSort[0], ballsToSort[i]) = (ballsToSort[i], ballsToSort[0]);
+            Heapify(ballsToSort, i, 0);
         }
 
         EndOfSort();

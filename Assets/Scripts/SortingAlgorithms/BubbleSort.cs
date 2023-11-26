@@ -13,16 +13,16 @@ public class BubbleSort : BaseSort
     {
         StartOfSort();
         
-        int n = sortedBalls.Length;
+        int n = ballsToSort.Length;
         bool swapped = n > 1;
         while (swapped)
         {
             swapped = false;
             for (int i = 1; i < n; i++)
             {
-                if(sortedBalls[i-1].distance > sortedBalls[i].distance)
+                if(ballsToSort[i-1].distance > ballsToSort[i].distance)
                 {
-                    (sortedBalls[i-1], sortedBalls[i]) = (sortedBalls[i], sortedBalls[i-1]);
+                    (ballsToSort[i-1], ballsToSort[i]) = (ballsToSort[i], ballsToSort[i-1]);
                     swapped = true;
                 }
             }

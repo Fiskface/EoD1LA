@@ -11,7 +11,7 @@ public class BaseSort : MonoBehaviour
 {
     public AlgorithmPortSO algorithmPort;
 
-    protected BallValues[] sortedBalls;
+    protected BallValues[] ballsToSort;
     public ArrayOfBalls ballArray;
 
     protected List<float> timeList = new List<float>();
@@ -44,7 +44,7 @@ public class BaseSort : MonoBehaviour
 
     protected void StartOfSort()
     {
-        sortedBalls = (BallValues[])ballArray.array.Clone();
+        ballsToSort = (BallValues[])ballArray.array.Clone();
         Profiler.BeginSample(GetType().Name, this);
         temp = Time.realtimeSinceStartup;
     }
@@ -55,7 +55,7 @@ public class BaseSort : MonoBehaviour
         Profiler.EndSample();
         timeAccumulated += temp;
         timeList.Add(temp * 1000);
-        ballArray.sortedArray = sortedBalls;
+        ballArray.sortedArray = ballsToSort;
         
         if(timeAccumulated > algorithmPort.MaxTimePerInterval) gameObject.SetActive(false);
     }

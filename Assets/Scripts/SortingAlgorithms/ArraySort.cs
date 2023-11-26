@@ -13,7 +13,7 @@ public class ArraySort : BaseSort
     {
         StartOfSort();
         
-        Array.Sort(sortedBalls, (o1, o2) => o1.distance.CompareTo(o2.distance));
+        Array.Sort(ballsToSort, (o1, o2) => o1.distance.CompareTo(o2.distance));
         
         EndOfSort();
     }

@@ -14,7 +14,7 @@ public class CombSort : BaseSort
     {
         StartOfSort();
 
-        int n = sortedBalls.Length;
+        int n = ballsToSort.Length;
         int gap = n;
         bool swapped = true;
         while (gap != 1 || swapped)
@@ -24,9 +24,9 @@ public class CombSort : BaseSort
 
             for (int i = 0; i < n - gap; i++)
             {
-                if(sortedBalls[i].distance > sortedBalls[i+gap].distance)
+                if(ballsToSort[i].distance > ballsToSort[i+gap].distance)
                 {
-                    (sortedBalls[i], sortedBalls[i + gap]) = (sortedBalls[i + gap], sortedBalls[i]);
+                    (ballsToSort[i], ballsToSort[i + gap]) = (ballsToSort[i + gap], ballsToSort[i]);
                     swapped = true;
                 }
             }

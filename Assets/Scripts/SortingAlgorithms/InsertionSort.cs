@@ -10,15 +10,15 @@ public class InsertionSort : BaseSort
 
         BallValues x;
         int j;
-        for (int i = 1; i < sortedBalls.Length; i++)
+        for (int i = 1; i < ballsToSort.Length; i++)
         {
-            x = sortedBalls[i];
-            for (j = i - 1; j >= 0 && sortedBalls[j].distance > x.distance; j--)
+            x = ballsToSort[i];
+            for (j = i - 1; j >= 0 && ballsToSort[j].distance > x.distance; j--)
             {
-                sortedBalls[j + 1] = sortedBalls[j];
+                ballsToSort[j + 1] = ballsToSort[j];
             }
 
-            sortedBalls[j + 1] = x;
+            ballsToSort[j + 1] = x;
         }
         
         EndOfSort();
